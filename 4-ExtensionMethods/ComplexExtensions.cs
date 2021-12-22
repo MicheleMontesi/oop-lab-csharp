@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 
 namespace ExtensionMethods
 {
@@ -35,6 +36,9 @@ namespace ExtensionMethods
             new Complex(c1.Real * c2.Real - c1.Imaginary * c2.Imaginary,
                         c1.Real * c1.Imaginary + c1.Imaginary * c2.Real);
 
+        public static IComplex Multiply(this IComplex c1, double scalar) =>
+            new Complex(c1.Real * scalar, c1.Imaginary * scalar);
+
         /// <summary>
         /// Divide two complex numbers.
         /// </summary>
@@ -43,6 +47,9 @@ namespace ExtensionMethods
         /// <returns>the quotient.</returns>
         public static IComplex Divide(this IComplex c1, IComplex c2) =>
             c1.Multiply(c2.Reciprocal());
+
+        public static IComplex Divide(this IComplex c1, double scalar) =>
+            c1.Multiply(1.0 / scalar);
 
         /// <summary>
         /// Get the complex conjugate of a complex number.
@@ -70,6 +77,6 @@ namespace ExtensionMethods
         /// <param name="c1">the complex operand.</param>
         /// <returns>the complex reciprocal.</returns>
         public static IComplex Reciprocal(this IComplex c1) =>
-            null;
+            c1.Conjugate().Divide(c1.Modulus * c1.Modulus);
     }
 }
